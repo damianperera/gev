@@ -77,7 +77,7 @@ test('a relocated data directory is named, not the read-only checkout', () => {
   assert.match(warning, /\/data \(GEV_DATA_DIR\) is owned by 0:0/, 'names the data directory');
   assert.match(warning, /Mount a volume/, 'points at the volume, not at a checkout');
   assert.match(warning, /chown 1000:1000/, 'offers the plain chown');
-  assert.match(warning, /101000:101000 on a Proxmox host for an unprivileged LXC/, 'names the shifted ids an unprivileged LXC needs');
+  assert.doesNotMatch(warning, /Proxmox|LXC|101000/, 'no host-specific guidance');
   assert.match(warning, /add :Z to the bind mount on SELinux/, 'names the SELinux label');
   assert.doesNotMatch(warning, /checkout/);
 });
@@ -87,6 +87,15 @@ test('the hardened image keeps everything it writes under GEV_DATA_DIR', () => {
   assert.match(dockerfile, /^ENV GEV_DATA_DIR=\/data$/m);
   assert.match(dockerfile, /^VOLUME \["\/data"\]$/m);
   assert.match(dockerfile, /^USER 1000:1000$/m);
+});
+
+test('every Dockerfile stage names the same digest-pinned base image', () => {
+  const dockerfile = readFileSync(new URL('../Dockerfile', import.meta.url), 'utf8');
+  const images = [...dockerfile.matchAll(/^FROM (\S+) AS \S+$/gm)].map((m) => m[1]);
+  assert.equal(images.length, 3, 'dev, deps and runtime stages');
+  assert.match(images[0], /^node:\d+\.\d+\.\d+-slim@sha256:[0-9a-f]{64}$/);
+  assert.equal(new Set(images).size, 1, 'all FROM lines use one image');
+  assert.doesNotMatch(dockerfile, /^ARG NODE_IMAGE/m, 'each FROM line names the base image itself');
 });
 
 test('the Docker install path keeps its loopback-only, launcher-owned contract', () => {
