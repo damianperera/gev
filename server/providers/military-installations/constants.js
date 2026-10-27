@@ -1,5 +1,4 @@
 import path from 'node:path';
-import { dataDir } from '../common/data-dir.js';
 
 // ---------------------------------------------------------------------------
 // Military-installation context proxy
@@ -35,7 +34,7 @@ const MILITARY_INSTALLATION_DISK_TTL_MS = 30 * 86_400_000;
 
 /** Disk-cache directory for mapped installation payloads. */
 const MILITARY_INSTALLATION_DISK_DIR = path.join(
-  dataDir(),
+  process.cwd(),
   '.gev-cache',
   'military-installations',
 );

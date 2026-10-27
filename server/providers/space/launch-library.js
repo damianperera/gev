@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { providerCooldownMs } from './cooldown.js';
-import { dataDir } from '../common/data-dir.js';
 import { promises as fsp } from 'node:fs';
 import {
   readResponseTextCapped,
@@ -27,7 +26,7 @@ export function rocketLaunchesProxy() {
   const maxResponseBytes = 12 * 1024 * 1024;
   const maxDiskCacheBytes = 24 * 1024 * 1024;
   const cachePath = path.join(
-    dataDir(),
+    process.cwd(),
     '.gev-cache',
     'launch-library-2-v2.3.json',
   );
