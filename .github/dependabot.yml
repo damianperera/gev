@@ -1,0 +1,8 @@
+# TEST ONLY (fork): does Dependabot read the base image from `ARG NODE_IMAGE`
+# in the Dockerfile? Docker ecosystem only, no ignores. Revert after the test.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
