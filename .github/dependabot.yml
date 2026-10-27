@@ -6,3 +6,4 @@ updates:
     directory: /
     schedule:
       interval: daily
+# Run 2: FROM lines now name the image directly (no ARG).
