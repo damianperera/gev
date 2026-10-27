@@ -8,7 +8,7 @@
 # Two targets. `dev` (below) is what compose.yaml builds: git for the test
 # suite, and the checkout bind-mounted over /app. `runtime` (last in this file)
 # is the hardened image that releases publish; it is also the default target.
-FROM node:24.14.0-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8 AS dev
+FROM node:24.21.0-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS dev
 
 # Puppeteer is only used by the QA scripts; skip its ~150MB Chromium download.
 ENV PUPPETEER_SKIP_DOWNLOAD=1
@@ -60,7 +60,7 @@ CMD ["node", "scripts/docker-start.mjs"]
 # (read-only root, no capabilities, --init); nothing here depends on them, they
 # are defence in depth.
 
-FROM node:24.14.0-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8 AS deps
+FROM node:24.21.0-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS deps
 ENV PUPPETEER_SKIP_DOWNLOAD=1
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -68,7 +68,7 @@ COPY package.json package-lock.json ./
 # The dev server needs the devDependencies (vite), so nothing is omitted.
 RUN npm ci && npm cache clean --force && rm -rf /root/.npm
 
-FROM node:24.14.0-slim@sha256:d8e448a56fc63242f70026718378bd4b00f8c82e78d20eefb199224a4d8e33d8 AS runtime
+FROM node:24.21.0-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20 AS runtime
 WORKDIR /app
 # Code and dependencies: root-owned, world-readable, not group/world-writable.
 COPY --from=deps --chmod=u=rwX,go=rX /app/node_modules ./node_modules
