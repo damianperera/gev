@@ -6,4 +6,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      - dependency-name: node
+        update-types: ['version-update:semver-major']
 # Run 2: FROM lines now name the image directly (no ARG).
+# Run 3: majors ignored, expect a Node 24 minor/patch bump instead of 26.
