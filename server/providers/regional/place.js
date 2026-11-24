@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { makeRateLimiter, clientKey } from '../common/rate-limit.js';
 import { admitSameSite } from '../common/same-site.js';
-import { dataDir } from '../common/data-dir.js';
 import { defaultSourceRoot } from '../common/source-root.js';
 import { naturalRegionAtPoint } from '../../../src/data/naturalEarthRegions.js';
 import {
@@ -131,7 +130,7 @@ function subscribeSharedRequest(inFlight, key, signal, create) {
 
 /** Where the dev server keeps Nominatim answers and the daily count. */
 export const NOMINATIM_CACHE_DIR = path.join(
-  dataDir(defaultSourceRoot),
+  defaultSourceRoot,
   '.gev-cache',
   'nominatim',
 );

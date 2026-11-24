@@ -9,7 +9,6 @@ import { conformanceReferencesPlugin } from './conformance-references.js';
 import { googleTokenUnavailablePlugin } from './google-token-unavailable.js';
 import { standaloneVoiceTools } from './voiceTools.js';
 import { unwatchedRuntimeDirsPlugin } from './unwatched-cache.js';
-import { dataDir, mergeDotenv } from '../providers/common/data-dir.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -18,8 +17,10 @@ export function standaloneConfig(
   { command, mode },
   { nominatimStorageDir } = {},
 ) {
-  // GEV_DATA_DIR (Docker) keeps the saved .env outside the read-only code.
-  mergeDotenv(loadEnv(mode, dataDir(root), ''));
+  const loaded = loadEnv(mode, root, '');
+  for (const [key, value] of Object.entries(loaded)) {
+    if (process.env[key] === undefined) process.env[key] = value;
+  }
   const tools = standaloneVoiceTools();
   return createBrowserViteConfig({
     plugins: [

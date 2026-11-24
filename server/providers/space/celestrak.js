@@ -7,7 +7,6 @@ import {
 import { providerCooldownMs } from './cooldown.js';
 import { admitSameSiteKeyless } from '../common/same-site.js';
 import { readResponseTextCapped } from '../common/http.js';
-import { dataDir } from '../common/data-dir.js';
 
 /**
  * Vite plugin: CelesTrak TLE proxy.
@@ -38,7 +37,7 @@ import { dataDir } from '../common/data-dir.js';
 export function celestrakProxy() {
   const TLE_TTL_MS = 6 * 3600_000;
   const SATCAT_TTL_MS = 24 * 3600_000;
-  const CACHE_DIR = path.join(dataDir(), '.gev-cache');
+  const CACHE_DIR = path.join(process.cwd(), '.gev-cache');
   /** The satellites layer's core groups (src/layers/satellites/policy.js). */
   const coreGroups = [
     'stations',
